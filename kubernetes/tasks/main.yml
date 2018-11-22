@@ -1,0 +1,16 @@
+# https://kubernetes.io/docs/user-guide/kubectl-overview/
+
+- name: Download credentials
+  command: gcloud container clusters get-credentials {{k8s_cluster}} --zone {{lookup('env', 'GCE_REGION_ZONE')}} --project {{lookup('env', 'GCE_PROJECT')}}
+
+- name: Set up secrets
+  command: kubectl apply -f {{item}}
+  with_items: "{{k8s_secrets}}"
+
+- name: Deploy apps
+  command: kubectl apply -f {{item}}
+  with_items: "{{k8s_deployments}}"
+
+- name: Set up services
+  command: kubectl apply -f {{item}}
+  with_items: "{{k8s_services}}"

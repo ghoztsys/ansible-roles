@@ -1,0 +1,14 @@
+- name: Reload systemd
+  command: systemctl daemon-reload
+
+- name: Restart Consul
+  action: service name=consul state=restarted enabled=true
+
+- name: Reload Consul
+  service: name=consul state=reloaded
+
+- name: Remove Consul archive
+  file:
+    path={{consul_download_path}}
+    state=absent
+    force=true

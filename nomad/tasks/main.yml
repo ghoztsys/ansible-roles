@@ -1,0 +1,73 @@
+- name: Install dependencies
+  apt: pkg={{item}} state=latest update_cache=true
+  with_items:
+    - unzip
+
+- name: Check if Nomad is already installed
+  stat: path={{nomad_bin_path}}
+  register: nomad_is_installed
+
+- name: Get current version of Nomad
+  shell: "{{nomad_bin_path}} -v 2>&1 | awk -F' v' '{print $2}'"
+  register: nomad_current_version
+  when: nomad_is_installed.stat.exists
+  changed_when: false
+
+- name: Download Nomad
+  get_url:
+    url={{nomad_download_url}}
+    dest={{nomad_download_path}}
+    mode=0440
+  register: nomad_is_downloaded
+  when: nomad_is_installed.stat.exists == false or nomad_current_version.stdout != "{{nomad_version}}"
+
+- name: Unarchive Nomad
+  unarchive:
+    src={{nomad_download_path}}
+    dest={{nomad_bin_dir}}
+    copy=false
+    keep_newer=true
+  when: nomad_is_downloaded|changed
+  notify:
+    - Remove Nomad archive
+
+- name: Create directories
+  file:
+    state=directory
+    path={{item}}
+    mode=0755
+  with_items:
+    - "{{nomad_config_dir}}"
+    - "{{nomad_data_dir}}"
+    - "{{nomad_home_dir}}/jobs"
+    - "{{nomad_home_dir}}/tmp/logs"
+    - "{{nomad_home_dir}}/tmp/uploads"
+
+- name: Deploy systemd script
+  template:
+    src=nomad.service.systemd.j2
+    dest=/etc/systemd/system/nomad.service
+    mode=0644
+  notify:
+    - Reload systemd
+
+- name: Deploy Nomad job
+  template:
+    src={{item.src}}
+    dest={{nomad_home_dir}}/jobs/{{item.filename}}
+    mode=0755
+  with_items: "{{nomad_job_files}}"
+  when: nomad_server is defined and nomad_server == true
+  notify:
+    - Restart Nomad
+
+- name: Deploy Nomad config file
+  template:
+    src=nomad.cfg.j2
+    dest={{nomad_config_dir}}/nomad.cfg
+    mode=0755
+  notify:
+    - Restart Nomad
+
+- name: Ensure Nomad is started
+  action: service name=nomad state=started

@@ -1,0 +1,74 @@
+- name: Update Apt cache
+  apt: update_cache=true cache_valid_time=3600
+
+- name: Install dependencies
+  apt: pkg={{item}} state=present
+  with_items:
+    - unzip
+
+- name: Check if Consul is already installed
+  stat: path={{consul_bin_path}}
+  register: consul_is_installed
+
+- name: Get current version of Consul
+  shell: "{{consul_bin_path}} -v 2>&1 | awk -F' v' '{print $2}'"
+  register: consul_current_version
+  when: consul_is_installed.stat.exists
+  changed_when: false
+
+- name: Download Consul
+  get_url:
+    url={{consul_download_url}}
+    dest={{consul_download_path}}
+    mode=0440
+  register: consul_is_downloaded
+  when: consul_is_installed.stat.exists == false or consul_current_version.stdout != "{{consul_version}}"
+
+- name: Unarchive Consul
+  unarchive:
+    src={{consul_download_path}}
+    dest={{consul_bin_dir}}
+    copy=false
+    keep_newer=true
+  when: consul_is_downloaded is changed
+
+- name: Create directories
+  file:
+    state=directory
+    path={{item}}
+    mode=0755
+  with_items:
+    - "{{consul_config_dir}}"
+    - "{{consul_data_dir}}"
+    - "{{consul_home_dir}}"
+
+- name: Deploy systemd script
+  template:
+    src=consul.service.systemd.j2
+    dest=/etc/systemd/system/consul.service
+    mode=0644
+  notify:
+    - Reload systemd
+
+- name: Deploy Consul watch handlers
+  template:
+    src={{item.src}}
+    dest={{consul_home_dir}}/{{item.filename}}
+    mode=a+x
+  with_items: "{{consul_watch_script_files}}"
+  when: consul_server is defined and consul_server == true
+  notify:
+    - Restart Consul
+
+- name: Deploy Consul config file
+  template:
+    src=consul.config.json.j2
+    dest={{consul_config_dir}}/config.json
+    mode=0755
+  notify:
+    - Restart Consul
+
+- name: Ensure Consul is started
+  action: service name=consul state=started
+  notify:
+    - Remove Consul archive

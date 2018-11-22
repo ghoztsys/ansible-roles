@@ -1,0 +1,14 @@
+[Unit]
+Description=Nomad Agent
+
+[Service]
+Type=simple
+User=root
+Group=root
+ExecStart=/usr/local/bin/nomad agent -config {{nomad_config_dir}}/nomad.cfg
+ExecReload=/bin/kill -HUP $MAINPID
+Restart=on-failure
+LimitNOFILE=65536
+
+[Install]
+WantedBy=multi-user.target

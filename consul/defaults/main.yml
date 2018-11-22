@@ -1,0 +1,18 @@
+consul_version: "1.0.3"
+consul_arch: "linux_amd64"
+
+consul_config_dir: /etc/consul.d
+consul_data_dir: /var/consul
+consul_home_dir: /opt/consul
+
+consul_bin_dir: "/usr/local/bin"
+consul_bin_file: "consul"
+consul_bin_path: "{{consul_bin_dir}}/{{consul_bin_file}}"
+
+consul_download_url: "https://releases.hashicorp.com/consul/{{consul_version}}/{{consul_download_file}}"
+consul_download_dir: "/tmp"
+consul_download_file: "consul_{{consul_version}}_{{consul_arch}}.zip"
+consul_download_path: "{{consul_download_dir}}/{{consul_download_file}}"
+
+consul_events: []
+consul_watch_script_files: []

@@ -1,0 +1,6 @@
+dependencies:
+  - role: consul_template
+    consul_template_templates:
+      - file: "{{haproxy_template_file}}"
+        dest: "{{haproxy_config_dir}}/{{haproxy_config_file}}"
+        command: "service haproxy restart"

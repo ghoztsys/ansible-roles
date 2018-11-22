@@ -1,0 +1,18 @@
+consul_template_version: "0.18.3"
+consul_template_arch: "linux_amd64"
+
+consul_template_config_dir: "/etc/consul-template.d"
+consul_template_config_file: "consul-template.cfg"
+
+consul_template_home_dir: "/opt/consul-template"
+
+consul_template_bin_dir: "/usr/local/bin"
+consul_template_bin_file: "consul-template"
+consul_template_bin_path: "{{consul_template_bin_dir}}/{{consul_template_bin_file}}"
+
+consul_template_download_url: "https://releases.hashicorp.com/consul-template/{{consul_template_version}}/{{consul_template_download_file}}"
+consul_template_download_dir: "/tmp"
+consul_template_download_file: "consul-template_{{consul_template_version}}_{{consul_template_arch}}.zip"
+consul_template_download_path: "{{consul_template_download_dir}}/{{consul_template_download_file}}"
+
+consul_template_templates: []

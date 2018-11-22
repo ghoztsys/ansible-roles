@@ -1,0 +1,49 @@
+#jinja2:variable_start_string:'[[', variable_end_string:']]', block_start_string:'[%', block_end_string:'%]'
+global
+  log 127.0.0.1 local2
+  daemon
+  debug
+  chroot /var/lib/haproxy
+  pidfile /var/run/haproxy.pid
+  user root
+  group root
+  maxconn 4096
+
+defaults
+  log global
+  mode [[ mode ]]
+  option httplog
+  option dontlognull
+  timeout http-request 10s
+  timeout queue 1m
+  timeout connect 10s
+  timeout client 1m
+  timeout server 1m
+  timeout http-keep-alive 10s
+  timeout check 10s
+
+listen stats
+  bind *:1936
+  stats enable
+  stats hide-version
+  stats realm Haproxy\ Statistics
+  stats uri /
+  stats auth username:password
+
+frontend http
+  bind *:80
+  reqadd X-Forwarded-Proto:\ http
+  default_backend [[lookup('env', 'SERVICE')]]
+
+[% if ssl == true %]
+frontend https
+  bind *:443 ssl crt /etc/ssl/private/sybl.io.pem
+  reqadd X-Forwarded-Proto:\ https
+  default_backend [[lookup('env', 'SERVICE')]]
+[% endif %]
+
+backend [[lookup('env', 'SERVICE')]]
+  balance [[ balance ]]
+    {{range service "[[lookup('env', 'SERVICE')]]" "any"}}
+    server {{.ID}} {{.Address}}:{{.Port}}
+    {{end}}

@@ -1,0 +1,17 @@
+redis_version: "3.2.6"
+
+redis_config_dir: /etc/redis
+redis_data_dir: /var/redis
+redis_home_dir: /opt/redis
+
+redis_bin_dir: "/usr/local"
+redis_bin_file: "redis"
+redis_bin_path: "{{redis_bin_dir}}/bin/{{redis_bin_file}}"
+
+redis_download_url: "http://download.redis.io/releases/{{redis_download_file}}"
+redis_download_dir: "/tmp"
+redis_download_file: "redis-{{redis_version}}.tar.gz"
+redis_download_path: "{{redis_download_dir}}/{{redis_download_file}}"
+
+redis_port: 6379
+redis_bind_interface: 127.0.0.1

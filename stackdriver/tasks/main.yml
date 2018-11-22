@@ -1,0 +1,26 @@
+- name: Check if logging agent is installed
+  shell: dpkg -s google-fluentd | grep 'install ok installed'
+  register: logger_agent_is_installed
+  failed_when: logger_agent_is_installed.rc > 1
+  changed_when: false
+
+- name: Download logging agent
+  get_url:
+    url={{logger_agent_download_url}}
+    dest={{logger_agent_download_path}}
+    mode=0440
+    # checksum=sha256:{{logger_agent_checksum}}
+  register: logger_agent_is_downloaded
+  when: logger_agent_is_installed.rc == 1
+
+- name: Install logging agent
+  command: bash {{logger_agent_download_path}}
+  notify:
+    - Remove logger agent install script
+  when: logger_agent_is_downloaded is changed
+
+- name: Ensure logging agent is installed
+  shell: dpkg -s google-fluentd | grep 'install ok installed'
+  register: logger_agent_is_installed
+  failed_when: logger_agent_is_installed.rc != 0
+  changed_when: false

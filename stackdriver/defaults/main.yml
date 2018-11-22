@@ -1,0 +1,4 @@
+logger_agent_download_url: "https://dl.google.com/cloudagents/install-logging-agent.sh"
+logger_agent_download_dir: "/tmp"
+logger_agent_download_file: "install-logging-agent.sh"
+logger_agent_download_path: "{{logger_agent_download_dir}}/{{logger_agent_download_file}}"

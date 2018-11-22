@@ -1,0 +1,52 @@
+{
+  {% if services is defined and services|length > 0 %}
+  {% for service in services %}
+  "service": {
+    "name": "{{service.name}}",
+    "port": {{service.port}}
+  },
+  {% endfor %}
+  {% endif %}
+
+  {% if consul_server is defined and consul_server == true %}
+  "server": true,
+  "bootstrap_expect": {{ansible_play_hosts|length}},
+  "ui": true,
+  "disable_remote_exec": false,
+  "addresses": {
+    "http": "0.0.0.0"
+  },
+  {% if consul_watch_script_files is defined and consul_watch_script_files|length > 0 %}
+  "watches": [{% for script in consul_watch_script_files %}{
+    "type": "event",
+    "name": "{{script.filename}}",
+    "handler": "{{consul_home_dir}}/{{script.filename}}"
+  }{% if not loop.last %},{% endif %}{% endfor %}],
+  {% endif %}
+  {% endif %}
+
+  {% if consul_server is defined and consul_server == true %}
+  {% if ansible_play_hosts.index(inventory_hostname) is equalto 0 %}
+  "start_join": [
+    {% for host in ansible_play_hosts|reject('sameas', inventory_hostname) -%}
+    "{{hostvars[host].gce_private_ip}}"{%- if not loop.last -%},{%- endif %}
+    {% endfor %}
+  ],
+  {% endif %}
+  {% endif %}
+
+  {% if consul_server is undefined or consul_server != true %}
+  "start_join": [
+    {% set _group = groups["tag_"+lookup('env','SERVICE')]|intersect(groups["tag_"+lookup('env','DATACENTER')])|intersect(groups["tag_"+lookup('env','ENVIRONMENT')])|intersect(groups["tag_master"]) %}
+    {% for host in _group -%}
+    "{{hostvars[host].gce_private_ip}}"{%- if not loop.last -%},{%- endif %}
+    {% endfor %}
+  ],
+  {% endif %}
+
+  "node_name": "{{node_name}}{{ansible_play_hosts.index(inventory_hostname)}}",
+  "data_dir": "{{consul_data_dir}}",
+  "bind_addr": "{{ansible_default_ipv4.address}}",
+  "datacenter": "{{lookup('env','DATACENTER')}}",
+  "log_level": "INFO"
+}

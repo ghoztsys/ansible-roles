@@ -1,0 +1,11 @@
+- name: Reload systemd
+  command: systemctl daemon-reload
+
+- name: Restart Nomad
+  service: name=nomad state=restarted enabled=true
+
+- name: Reload Nomad
+  service: name=nomad state=reloaded
+
+- name: Remove Nomad archive
+  file: path={{nomad_download_path}} state=absent force=true

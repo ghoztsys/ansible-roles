@@ -1,0 +1,17 @@
+nomad_version: "0.7.1"
+nomad_arch: "linux_amd64"
+
+nomad_config_dir: /etc/nomad.d
+nomad_data_dir: /var/nomad
+nomad_home_dir: /opt/nomad
+
+nomad_bin_dir: "/usr/local/bin"
+nomad_bin_file: "nomad"
+nomad_bin_path: "{{nomad_bin_dir}}/{{nomad_bin_file}}"
+
+nomad_download_url: "https://releases.hashicorp.com/nomad/{{nomad_version}}/{{nomad_download_file}}"
+nomad_download_dir: "/tmp"
+nomad_download_file: "nomad_{{nomad_version}}_{{nomad_arch}}.zip"
+nomad_download_path: "{{nomad_download_dir}}/{{nomad_download_file}}"
+
+nomad_job_files: []

@@ -1,0 +1,11 @@
+[Unit]
+Description=consul-template
+
+[Service]
+Restart=on-failure
+User=root
+Group=root
+ExecStart={{consul_template_bin_path}} -config={{consul_template_config_dir}}/{{consul_template_config_file}}
+
+[Install]
+WantedBy=multi-user.target

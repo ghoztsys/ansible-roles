@@ -1,0 +1,24 @@
+- name: Install dependencies
+  apt: pkg={{item}} state=latest update_cache=true
+  with_items:
+    - redis-server
+
+- name: Create directories
+  file:
+    state=directory
+    path={{item}}
+    mode=0755
+  with_items:
+    - "{{redis_config_dir}}"
+    - "{{redis_data_dir}}"
+    - "{{redis_home_dir}}"
+
+- name: Deploy Redis config
+  template:
+    src=redis.conf.j2
+    dest={{redis_config_dir}}/redis.conf
+    mode=0644
+  notify: Restart Redis
+
+- name: Ensure Redis is started
+  service: name=redis-server state=started enabled=yes

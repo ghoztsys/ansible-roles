@@ -1,0 +1,4 @@
+haproxy_config_dir: "/etc/haproxy"
+haproxy_config_file: "haproxy.cfg"
+haproxy_template_file: "haproxy.ctmpl"
+ssl: false

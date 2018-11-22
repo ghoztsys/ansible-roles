@@ -1,0 +1,63 @@
+- name: Check if Consul Template is already installed
+  stat: path={{consul_template_bin_path}}
+  register: consul_template_is_installed
+
+- name: Get current version of Consul Template
+  shell: "{{consul_template_bin_dir}}/consul-template -v 2>&1 | awk -F' v' '{print $2}'"
+  register: consul_template_current_version
+  when: consul_template_is_installed.stat.exists
+  changed_when: false
+
+- name: Download Consul Template
+  get_url:
+    url={{consul_template_download_url}}
+    dest={{consul_template_download_path}}
+    mode=0644
+  when: consul_template_is_installed.stat.exists == false or consul_template_current_version.stdout != "{{consul_template_version}}"
+  register: consul_template_is_downloaded
+
+- name: Install Consul Template
+  unarchive:
+    src={{consul_template_download_path}}
+    dest={{consul_template_bin_dir}}
+    copy=false
+    keep_newer=true
+  when: consul_template_is_downloaded|changed
+
+- name: Create directories
+  file:
+    state=directory
+    path={{item}}
+    mode=0755
+  with_items:
+    - "{{consul_template_config_dir}}"
+    - "{{consul_template_home_dir}}"
+
+- name: Deploy Consul Template systemd script
+  template:
+    src=consul_template.service.systemd.j2
+    dest=/etc/systemd/system/consul-template.service
+    mode=0644
+  notify:
+    - Reload systemd
+
+- name: Deploy template files
+  template:
+    src={{item.file}}.j2
+    dest={{consul_template_home_dir}}/{{item.file}}
+  with_items: "{{consul_template_templates}}"
+  when: consul_template_templates is defined and consul_template_templates|length > 0
+  notify:
+    - Restart Consul Template
+
+- name: Deploy Consul Template config
+  template:
+    src=consul_template.cfg.j2
+    dest={{consul_template_config_dir}}/{{consul_template_config_file}}
+  notify:
+    - Restart Consul Template
+
+- name: Ensure Consul Template is started
+  action: service name=consul-template state=started
+  notify:
+    - Remove Consul Template archive

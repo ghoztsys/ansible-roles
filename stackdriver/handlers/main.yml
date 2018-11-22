@@ -1,0 +1,5 @@
+- name: Remove logger agent install script
+  file:
+    path={{logger_agent_download_path}}
+    state=absent
+    force=true

@@ -1,0 +1,25 @@
+data_dir = "{{nomad_data_dir}}"
+datacenter = "{{lookup('env','DATACENTER')}}"
+log_level = "DEBUG"
+
+{% if nomad_server is defined and nomad_server == true %}
+server {
+  enabled = true
+  bootstrap_expect = {{ansible_play_hosts|length}}
+}
+{% endif %}
+
+{% if nomad_client is defined and nomad_client == true %}
+client {
+  enabled = true
+
+  options {
+    "docker.auth.config" = "/root/.docker/config.json"
+  }
+}
+{% endif %}
+
+consul {
+  server_service_name = "nomad"
+  client_service_name = "node"
+}

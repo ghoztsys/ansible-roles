@@ -1,0 +1,15 @@
+# See https://github.com/hashicorp/consul-template
+
+retry = "10s"
+
+{% if consul_template_templates %}
+{% for template in consul_template_templates %}
+template {
+  source = "{{consul_template_home_dir}}/{{template.file}}"
+  destination = "{{template.dest}}"
+  {% if template.command is defined %}command = "{{template.command}}"{% endif %}
+  {% if template.perms is defined %}perms = {{template.perms}}{% endif %}
+  {% if template.backup is defined %}backup = {{template.backup|lower}}{% endif %}
+  {% if template.wait is defined %}wait = {{template.wait|lower}}{% endif %}
+}{% endfor %}
+{% endif %}
