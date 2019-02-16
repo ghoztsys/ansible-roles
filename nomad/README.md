@@ -1,4 +1,4 @@
-# nomad
+# `nomad`
 
 [Nomad](https://www.nomadproject.io) is used to schedule jobs in server clusters. In Sybl's case, it is responsible for scheduling jobs in the API node cluster, running Docker containers containing the API app. See official [introduction](https://www.nomadproject.io/intro/) and [documentation](https://www.nomadproject.io/docs/index.html) for more details.
 
@@ -16,9 +16,9 @@ To check connected client nodes:
 $ nomad node-status
 ```
 
-## Prerequisites
+## OS
 
-- Ubuntu 14.04+ with `systemd`
+Ubuntu 14.04+ with `systemd`
 
 ## Created Files
 

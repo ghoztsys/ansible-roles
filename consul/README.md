@@ -1,4 +1,4 @@
-# consul
+# `consul`
 
 [Consul](https://www.consul.io) is used for service discovery within and between datacenters. In Sybl there will be a cluster of Consul servers per datacenter (the Consul documentation recommends that you have either 3 or 5 Consul servers running in each datacenter to avoid data loss in the event of a server failure. An odd number of servers is necessary to avoid stalemate issues during leader elections). Consul servers are the component that do the heavy lifting. They store information about services and key/value information. Every other node that provides a service to Consul will have a Consul agent installed. These Consul agents will not be configured as servers.
 
@@ -12,9 +12,9 @@ $ consul members
 
 This should yield a list of nodes (server and client) within this datacenter that are Consul-aware. For more details add the `-detailed` flag at the end of the command.
 
-## Prerequisites
+## OS
 
-- Ubuntu 14.04+ with `systemd`
+Ubuntu 14.04+ with `systemd`
 
 ## Created Files
 

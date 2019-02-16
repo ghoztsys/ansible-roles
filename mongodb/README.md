@@ -1,7 +1,7 @@
-# mongodb
+# `mongodb`
 
 This role configures a sharded [MongoDB](https://www.mongodb.com/) cluster in the target hosts.
 
-## Prerequisites
+## OS
 
-- Ubuntu 14.04+ with `systemd`
+Ubuntu 14.04+ with `systemd`

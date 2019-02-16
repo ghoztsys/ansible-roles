@@ -1,10 +1,10 @@
-# haproxy
+# `haproxy`
 
 [HAProxy](http://www.haproxy.org/) is the load balancer of choice. It load balances Sybl's API servers. It collects health check statistics which can be viewed at `http://<haproxy_server_ip>:1936/stats`. It is dependent on [[Consul Template]].
 
-## Prerequisites
+## OS
 
-- Ubuntu 14.04+ with `systemd`
+Ubuntu 14.04+ with `systemd`
 
 ## Created Files
 

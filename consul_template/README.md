@@ -1,12 +1,12 @@
-# consul_template
+# `consul_template`
 
 [Consul Template](https://github.com/hashicorp/consul-template) provides a convenient way to modify the file system whenever values in [[Consul]] changes. For instance, when new app nodes are discovered, [[HAProxy]] needs to know about them, add them to its config and restart so traffic can be directed to these nodes.
 
 This role sets up the target hosts with Consul Template and the logic for updating HAProxy when Consul discovers new nodes.
 
-## Prerequisites
+## OS
 
-- Ubuntu 14.04+ with `systemd`
+Ubuntu 14.04+ with `systemd`
 
 ## Created Files
 
