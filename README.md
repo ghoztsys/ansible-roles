@@ -17,6 +17,6 @@ $ cat .gitmodules
 
 See individual README's of each role for more info.
 
-## License
+---
 
 © Sybl
