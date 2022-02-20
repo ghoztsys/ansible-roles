@@ -37,7 +37,7 @@ frontend http
 
 [% if ssl == true %]
 frontend https
-  bind *:443 ssl crt /etc/ssl/private/sybl.io.pem
+  bind *:443 ssl crt /etc/ssl/private/key.io.pem
   reqadd X-Forwarded-Proto:\ https
   default_backend [[lookup('env', 'SERVICE')]]
 [% endif %]

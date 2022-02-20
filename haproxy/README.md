@@ -1,6 +1,6 @@
 # `haproxy`
 
-[HAProxy](http://www.haproxy.org/) is the load balancer of choice. It load balances Sybl's API servers. It collects health check statistics which can be viewed at `http://<haproxy_server_ip>:1936/stats`. It is dependent on [[Consul Template]].
+[HAProxy](http://www.haproxy.org/) is the load balancer of choice. It collects health check statistics which can be viewed at `http://<haproxy_server_ip>:1936/stats`. It is dependent on [[Consul Template]].
 
 ## OS
 

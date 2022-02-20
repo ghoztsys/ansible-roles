@@ -1,6 +1,6 @@
 # `nomad`
 
-[Nomad](https://www.nomadproject.io) is used to schedule jobs in server clusters. In Sybl's case, it is responsible for scheduling jobs in the API node cluster, running Docker containers containing the API app. See official [introduction](https://www.nomadproject.io/intro/) and [documentation](https://www.nomadproject.io/docs/index.html) for more details.
+[Nomad](https://www.nomadproject.io) is used to schedule jobs in server clusters. It is responsible for scheduling jobs in the API node cluster, running Docker containers containing the API app. See official [introduction](https://www.nomadproject.io/intro/) and [documentation](https://www.nomadproject.io/docs/index.html) for more details.
 
 This role installs Nomad on all nodes that need to be scheduled. Nomad, like Consul, has two agent types: server and client. Nomad servers are responsible for doing the heavylifting and schedule jobs on the clients, while the clients simply execute the jobs given to them by the servers. It is recommended to have multiple Nomad servers running in a datacenter to prevent data loss should the lone server fails, and an odd number of servers is required to avoid stalemate situations when electing a server leader.
 
