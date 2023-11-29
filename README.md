@@ -7,7 +7,7 @@ Custom Ansible roles.
 Add this repo as a Git submodule to your IaC repo:
 
 ```sh
-$ git submodule add git@github.com:0xGHOZT/ansible-roles roles
+$ git submodule add git@github.com:ghoztsys/ansible-roles roles
 
 # Check generated file.
 $ cat .gitmodules
