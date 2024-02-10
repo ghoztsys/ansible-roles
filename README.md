@@ -1,4 +1,4 @@
-# Ansible Roles
+# Ansible Roles [![CD](https://github.com/ghoztsys/ansible-roles/workflows/CD/badge.svg)](https://github.com/ghoztsys/ansible-roles/actions/workflows/cd.yml)
 
 Custom Ansible roles.
 
